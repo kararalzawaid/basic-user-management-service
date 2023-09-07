@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  user-management:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: user_management
+    command: >
+      sh -c "yarn install &&
+        yarn api-doc &&
+        yarn start
+        "
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    volumes:
+      - .:/app
+      - /app/node_modules
+  user-management-mysql:
+    platform: linux/x86_64
+    container_name: user_management_mysql
+    image: mysql:5.7
+    ports:
+      - "3310:3306"
+    command: --init-file /db/init.sql
+    volumes:
+        - ./config/db.init.sql:/db/init.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=user_management
+networks:
+  default:
+    name: ${DOCKER_NETWORK}
