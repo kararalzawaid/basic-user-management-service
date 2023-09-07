@@ -25,7 +25,6 @@ const create = async (req, res) => {
     let user = await User.findOne({
       where: { email: req.body.email }
     });
-    console.log('sssssadsads');
 
     if (user) {
       return res.status(ResponseCodes.BAD_REQUEST).send({
@@ -38,7 +37,6 @@ const create = async (req, res) => {
         statusCode: ResponseCodes.BAD_REQUEST
       });
     }
-    console.log('sssssadsads');
 
     user = await userService.create(req.body);
 
