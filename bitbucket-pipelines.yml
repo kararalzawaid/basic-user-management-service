@@ -1,0 +1,35 @@
+image: node:14.9.0
+
+pipelines:
+  pull-requests:
+    '**':
+      - step:
+          caches:
+            - node
+          script:
+            - git clone https://$BITBUCKET_DEVOPS_USERNAME:$BITBUCKET_DEVOPS_PASSWORD@bitbucket.org/digital-dood/bitbucket-devops.git
+            - cp bitbucket-devops/$DEVOPS_PIPELINE_SCRIPT_PATH build.sh
+            - /bin/bash build.sh
+  branches:
+    master:
+      - step:
+          deployment: Production
+          script:
+            - git fetch
+            - git pull
+            - ssh -o BatchMode=yes -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_URL -p $SERVER_PORT "cd $SERVER_PROJECT_PATH && ./update.sh"
+            
+    V2:
+      - step:
+          deployment: PTH - UAT
+          script:
+            - git fetch
+            - git pull
+            - ssh -o BatchMode=yes -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_URL -p $SERVER_PORT "cd $SERVER_PROJECT_PATH && ./update.sh"
+    dev:
+      - step:
+          deployment: PTH - DEV
+          script:
+            - git fetch
+            - git pull
+            - ssh -o BatchMode=yes -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_URL -p $SERVER_PORT "cd $SERVER_PROJECT_PATH && ./update.sh"

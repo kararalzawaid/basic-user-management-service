@@ -1,0 +1,14 @@
+swagger: '2.0'
+host: ''
+basePath: /api
+schemes: ['http', 'https']
+info:
+  title: User-Management
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    in: header
+    name: x-access-token
+security:
+  - ApiKeyAuth: []
+  - CsrfAuth: []
